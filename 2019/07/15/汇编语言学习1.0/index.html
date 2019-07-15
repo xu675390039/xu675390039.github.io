@@ -1,0 +1,115 @@
+<!DOCTYPE html><html><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="x77"><meta name="renderer" content="webkit"><meta name="copyright" content="x77"><meta name="keywords" content="x77"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>汇编语言学习1.0 · x77's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script></head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">x77</div><div class="profile-signature">for me</div><div class="friends"><div>FRIENDS</div><span><a href="http:////www.treeyhub.com/" target="_black">treeyhub</a></span><span><a href="https://www.si1eo.top" target="_black">si1eo</a></span><span><a href="https://wang66.top" target="_black">wang66</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">x77</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">汇编语言学习1.0</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-edit"></i><span>2019-07-15 17:52:25</span></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">499</span> | Reading time: <span class="post-count">1</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h2 id="汇编语言学习1-0"><a href="#汇编语言学习1-0" class="headerlink" title="汇编语言学习1.0"></a>汇编语言学习1.0</h2><h3 id="机器语言"><a href="#机器语言" class="headerlink" title="机器语言"></a>机器语言</h3><h4 id="什么是机器语言"><a href="#什么是机器语言" class="headerlink" title="什么是机器语言"></a>什么是机器语言</h4><blockquote>
+<p>机器语言是机器指令的集合，即为一台机器可以正确执行的命令，由一列二进制数字组成（0、1）</p>
+</blockquote>
+<h3 id="汇编语言"><a href="#汇编语言" class="headerlink" title="汇编语言"></a>汇编语言</h3><h4 id="什么是汇编语言"><a href="#什么是汇编语言" class="headerlink" title="什么是汇编语言"></a>什么是汇编语言</h4><blockquote>
+<p>机器语言难于辨别和记忆，汇编语言主体是汇编指令，主要和机器语言的差别IE在指令的表示方法。为比较容易记忆的书写格式，但汇编语言无法被计算机读懂，需要编译器对其编译为机器码，再最终执行</p>
+</blockquote>
+<h4 id="汇编语言的组成"><a href="#汇编语言的组成" class="headerlink" title="汇编语言的组成"></a>汇编语言的组成</h4><blockquote>
+<p>1.汇编指令<br>汇编语言的核心是汇编指令，决定了汇编语言的特性。</p>
+<blockquote>
+<p>在执行阶段发挥作用，用于告诉汇编程序如何进行汇编，既不控制机器的操作也不被会变成机器代码，只能为汇编程序所识别并指导汇编如何进行，即告诉机器如何对数据进行处理，每一条指令语句表示计算机具有的一个基本能力，每一条汇编指令都有对应的机器码。<br>2.伪指令<br>起辅助作用，为编译系统服务，伪指令的功能主要以定位程序数据或指令位置为主,如存储单元如何分配，定义了哪些数据，哪个段寄存器指向，类似于程序中main，指针等功能。伪指令没有对应的机器码。<br>3.其他符号<br>如+、-、*、/等，由编译器识别，没有对应的机器码。</p>
+</blockquote>
+</blockquote>
+<h4 id="存储器"><a href="#存储器" class="headerlink" title="存储器"></a>存储器</h4><blockquote>
+<p>CPU是计算机的核心部件，控制整个计算机的运作并进行运算。<br>指令和数据在存储器中存放，想要一个CPU工作就必须向它提供指令和数据。CPU的工作依赖于内存，主要需了解CPU是如何从内存中读取信息，以及向内存写入信息的。</p>
+</blockquote>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://www.x77.fun">x77</a></p><p> <span>Link:  </span><a href="http://www.x77.fun/2019/07/15/汇编语言学习1.0/">http://www.x77.fun/2019/07/15/汇编语言学习1.0/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="nextSlogan" href="/2019/07/12/一位想学习逆向的菜鸡/" title="逆向入门"><span>NextPost ></span><br><span class="nextTitle">逆向入门</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#汇编语言学习1-0"><span class="toc-number">1.</span> <span class="toc-text">汇编语言学习1.0</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#机器语言"><span class="toc-number">1.1.</span> <span class="toc-text">机器语言</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是机器语言"><span class="toc-number">1.1.1.</span> <span class="toc-text">什么是机器语言</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#汇编语言"><span class="toc-number">1.2.</span> <span class="toc-text">汇编语言</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是汇编语言"><span class="toc-number">1.2.1.</span> <span class="toc-text">什么是汇编语言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#汇编语言的组成"><span class="toc-number">1.2.2.</span> <span class="toc-text">汇编语言的组成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#存储器"><span class="toc-number">1.2.3.</span> <span class="toc-text">存储器</span></a></li></ol></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
